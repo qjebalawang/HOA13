@@ -115,11 +115,10 @@
     backup: yes
   notify: Restart Memcached
 
-handlers:
-  - name: Restart Memcached
-    service:
-      name: memcached
-      state: restarted
+- name: Restart Memcached
+  service:
+    name: memcached
+    state: restarted
 
 # Etcd
 - name: Install Etcd
