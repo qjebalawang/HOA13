@@ -74,9 +74,6 @@
     name: mysql
     state: restarted
 
-- name: Secure MariaDB installation
-  command: mysql_secure_installation
-
 # Message Queue
 - name: Install RabbitMQ server
   apt:
