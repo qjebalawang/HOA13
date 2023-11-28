@@ -1,0 +1,19 @@
+---
+# Network Time Protocol (NTP)
+- name: installation of Chrony
+  apt:
+    name: chrony
+    state: latest
+
+- name: configuration of Chrony
+
+
+# OpenStack Packages
+
+# SQL Database
+
+# Message Queue
+
+# Memcached
+
+# Etcd
