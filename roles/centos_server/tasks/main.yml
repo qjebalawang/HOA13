@@ -37,14 +37,22 @@
     state: restarted
 
 # OpenStack Packages
-- name: Install OpenStack client
+- name: Install OpenStack client dependencies
   yum:
     name:
       - python2-pip
+      - python2-devel
+      - gcc
+
+- name: Install pbr using pip
+  pip:
+    name: pbr
+    executable: /usr/bin/pip2
 
 - name: Install python-openstackclient using pip
   pip:
     name: python-openstackclient
+    executable: /usr/bin/pip2
 
 - name: Install EPEL repository
   yum:
