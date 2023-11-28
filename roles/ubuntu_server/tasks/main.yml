@@ -70,11 +70,17 @@
       - python3-pymysql
     state: present
 
-- name: Create and edit MariaDB configuration file
-  template:
-    src: templates/99-openstack.cnf.j2
+- name: Copy OpenStack MariaDB configuration file
+  copy:
+    content: |
+      [mysqld]
+      bind-address = 10.0.0.11
+      default-storage-engine = innodb
+      innodb_file_per_table = on
+      max_connections = 4096
+      collation-server = utf8_general_ci
+      character-set-server = utf8
     dest: /etc/mysql/mariadb.conf.d/99-openstack.cnf
-  notify: Restart MariaDB
 
 - name: Restart MariaDB
   service:
