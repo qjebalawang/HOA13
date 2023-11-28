@@ -70,7 +70,12 @@
       - python3-pymysql
     state: present
 
-- name: Create and edit OpenStack MariaDB configuration file
+- name: Ensure the directory exists
+  file:
+    path: /etc/mysql/mariadb.conf.d/
+    state: directory
+
+- name: Add OpenStack MariaDB configuration file
   blockinfile:
     path: /etc/mysql/mariadb.conf.d/99-openstack.cnf
     block: |
@@ -101,7 +106,7 @@
   args:
     creates: "/var/lib/rabbitmq/.erlang.cookie"
   vars:
-    RABBIT_PASS: your_rabbitmq_password
+    RABBIT_PASS: rabbitmq_password
 
 - name: Set permissions for OpenStack user in RabbitMQ
   command: rabbitmqctl set_permissions openstack ".*" ".*" ".*"
