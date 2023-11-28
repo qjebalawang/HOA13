@@ -3,7 +3,7 @@
   become: true
   pre_tasks:
 
-    - name: install updates (CentOS)
+    - name: Install updates (CentOS)
       tags: always
       yum:
         name: '*'
@@ -12,7 +12,7 @@
       changed_when: false
       when: ansible_distribution == "CentOS"
 
-    - name: install updates (Ubuntu)
+    - name: Install updates (Ubuntu)
       tags: always
       apt:
         update_cache: yes
