@@ -44,7 +44,7 @@
     state: stopped
   loop:
     - yum-cron
-    - dnf-automatic
+    - yum-automatic
 
 - name: Install OpenStack repository
   yum:
