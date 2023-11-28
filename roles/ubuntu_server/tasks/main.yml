@@ -70,9 +70,14 @@
       - python3-pymysql
     state: present
 
-- name: Create the directory if it doesn't exist
+- name: Create the directory
   file:
-    path: /etc/mysql/mariadb.conf.d/
+    path: /etc/mysql/mariadb.conf.d/99-openstack.cnf
+    state: directory
+
+- name: Ensure the directory exists
+  file:
+    path: /etc/mysql/mariadb.conf.d/99-openstack.cnf
     state: directory
 
 - name: Add OpenStack MariaDB configuration file
