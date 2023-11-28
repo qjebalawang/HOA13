@@ -37,9 +37,17 @@
     state: restarted
 
 # OpenStack Packages
-- name: Install OpenStack client
+- name: Install EPEL repository
   yum:
-    name: python-openstackclient
+    name: epel-release
+  when: ansible_distribution_major_version == "7"
+
+- name: Install OpenStack clien
+  yum:
+    name: 
+      - python-openstackclient
+    enablerepo: epel
+  when: ansible_distribution_major_version == "7"
 
 - name: Install openstack-selinux
   yum:
