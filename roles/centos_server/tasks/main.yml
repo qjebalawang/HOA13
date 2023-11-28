@@ -37,15 +37,6 @@
     state: restarted
 
 # OpenStack Packages
-- name: Disable automatic update services
-  systemd:
-    name: "{{ item }}"
-    enabled: no
-    state: stopped
-  loop:
-    - yum-cron
-    - yum-automatic
-
 - name: Install OpenStack repository
   yum:
     name: centos-release-openstack-{{ openstack_release }}
