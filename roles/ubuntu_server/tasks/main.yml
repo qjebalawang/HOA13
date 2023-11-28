@@ -99,7 +99,7 @@ handlers:
   command: rabbitmqctl set_permissions openstack ".*" ".*" ".*"
 
 vars:
-  your_rabbitmq_password: 1234
+  rabbitmq_password: 1234
 
 # Memcached
 - name: Install Memcached and Python3 Memcache
@@ -149,3 +149,11 @@ handlers:
     name: etcd
     enabled: yes
     state: restarted
+
+
+
+
+
+
+
+
