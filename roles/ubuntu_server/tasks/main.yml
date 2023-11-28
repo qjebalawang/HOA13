@@ -18,11 +18,10 @@
 
   notify: Restart Chrony
 
-handlers:
-  - name: Restart Chrony
-    service:
-      name: chrony
-      state: restarted
+- name: Restart Chrony
+  service:
+    name: chrony
+    state: restarted
 
   - name: Display Chrony Sources
     command: chronyc sources
