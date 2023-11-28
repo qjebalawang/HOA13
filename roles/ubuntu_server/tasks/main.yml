@@ -72,7 +72,7 @@
 
 - name: Create the directory
   file:
-    path: /etc/mysql/mariadb.conf.d/
+    path: /etc/mysql/mariadb.conf.d/99-openstack.cnf
     state: directory
 
 - name: Copy OpenStack MariaDB configuration file
