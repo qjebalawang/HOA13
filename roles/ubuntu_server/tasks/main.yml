@@ -81,11 +81,11 @@
     state: present
 
 - name: Add OpenStack user to RabbitMQ
-  command: rabbitmqctl add_user openstack RABBIT_PASS
+  command: rabbitmqctl add_user openstack "{{ rabbitmq_password }}"
   args:
     creates: "/var/lib/rabbitmq/.erlang.cookie"
   vars:
-    RABBIT_PASS: rabbitmq_password
+    rabbitmq_password: 1234
 
 - name: Set permissions for OpenStack user in RabbitMQ
   command: rabbitmqctl set_permissions openstack ".*" ".*" ".*"
