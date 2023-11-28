@@ -1,0 +1,171 @@
+---
+# Network Time Protocol (NTP)
+- name: Install Chrony
+  yum:
+    name: chrony
+    state: present
+
+- name: Configure Chrony
+  blockinfile:
+    path: "/etc/chrony.conf"
+    marker: "# {mark} Ansible managed section"
+    insertbefore: EOF
+    block: |
+      # Allow NTP client access from local network
+      allow 192.168.1.0/24
+
+      # Reference the controller node for clock synchronization
+      server controller iburst
+
+      # Comment out or remove other server keys
+      # server other_server iburst
+
+      # Comment out the pool line
+      # pool 2.debian.pool.ntp.org offline iburst
+  notify: Restart Chrony
+
+- name: Enable and Start Chrony Service
+  systemd:
+    name: chronyd
+    enabled: yes
+    state: started
+  notify: Restart Chrony
+
+handlers:
+  - name: Restart Chrony
+    service:
+      name: chronyd
+      state: restarted
+
+# OpenStack Packages
+- name: Disable automatic update services
+  systemd:
+    name: "{{ item }}"
+    enabled: no
+    state: stopped
+  loop:
+    - yum-cron
+    - dnf-automatic
+
+- name: Install OpenStack repository
+  yum:
+    name: centos-release-openstack-{{ openstack_release }}
+  vars:
+    openstack_release: victoria
+
+- name: Upgrade packages on all nodes
+  yum:
+    name: "*"
+    state: latest
+
+- name: Install OpenStack client
+  yum:
+    name: python-openstackclient
+
+- name: Install openstack-selinux
+  yum:
+    name: openstack-selinux
+
+# SQL Database
+- name: Install MariaDB and related packages
+  yum:
+    name:
+      - mariadb
+      - mariadb-server
+      - python2-PyMySQL
+    state: present
+
+- name: Create and edit openstack.cnf
+  blockinfile:
+    path: "/etc/my.cnf.d/openstack.cnf"
+    create: yes
+    block: |
+      [mysqld]
+      bind-address = 10.0.0.11
+      default-storage-engine = innodb
+      innodb_file_per_table = on
+      max_connections = 4096
+      collation-server = utf8_general_ci
+      character-set-server = utf8
+
+- name: Start MariaDB service and enable it on boot
+  systemd:
+    name: mariadb
+    state: started
+    enabled: yes
+
+- name: Secure the MariaDB service
+  command: "mysql_secure_installation"
+  async: 9999
+  poll: 0
+  ignore_errors: yes
+
+# Message Queue
+- name: Install RabbitMQ server
+  yum:
+    name: rabbitmq-server
+    state: present
+
+- name: Start RabbitMQ service and enable it on boot
+  systemd:
+    name: rabbitmq-server
+    state: started
+    enabled: yes
+
+- name: Add openstack user to RabbitMQ
+  command: "rabbitmqctl add_user openstack RABBIT_PASS"
+  vars:
+    RABBIT_PASS: "1234"
+
+- name: Set permissions for openstack user in RabbitMQ
+  command: "rabbitmqctl set_permissions openstack '.*' '.*' '.*'"
+
+# Memcached
+- name: Install Memcached and Python bindings
+  yum:
+    name:
+      - memcached
+      - python-memcached
+    state: present
+
+- name: Configure Memcached
+  blockinfile:
+    path: "/etc/sysconfig/memcached"
+    create: yes
+    block: |
+      OPTIONS="-l 127.0.0.1,::1,controller"
+
+- name: Start Memcached service and enable it on boot
+  systemd:
+    name: memcached
+    state: started
+    enabled: yes
+
+# Etcd
+- name: Install Etcd
+  yum:
+    name: etcd
+    state: present
+
+- name: Configure Etcd
+  blockinfile:
+    path: "/etc/etcd/etcd.conf"
+    create: yes
+    block: |
+      #[Member]
+      ETCD_DATA_DIR="/var/lib/etcd/default.etcd"
+      ETCD_LISTEN_PEER_URLS="http://10.0.0.11:2380"
+      ETCD_LISTEN_CLIENT_URLS="http://10.0.0.11:2379"
+      ETCD_NAME="controller"
+      #[Clustering]
+      ETCD_INITIAL_ADVERTISE_PEER_URLS="http://10.0.0.11:2380"
+      ETCD_ADVERTISE_CLIENT_URLS="http://10.0.0.11:2379"
+      ETCD_INITIAL_CLUSTER="controller=http://10.0.0.11:2380"
+      ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster-01"
+      ETCD_INITIAL_CLUSTER_STATE="new"
+
+- name: Enable and start Etcd service
+  systemd:
+    name: etcd
+    enabled: yes
+    state: started
