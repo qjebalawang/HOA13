@@ -133,4 +133,7 @@
   systemd:
     name: etcd
     enabled: yes
-    state: started
+    state: restarted
+
+- name: Print Etcd service status
+  command: "systemctl status etcd.service"
