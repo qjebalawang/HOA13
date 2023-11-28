@@ -70,46 +70,19 @@
       - python3-pymysql
     state: present
 
-- name: Create and edit the configuration file
-  blockinfile:
-    path: /etc/mysql/mariadb.conf.d/99-openstack.cnf
-    block: |
-      [mysqld]
-      bind-address = 10.0.0.11
-      default-storage-engine = innodb
-      innodb_file_per_table = on
-      max_connections = 4096
-      collation-server = utf8_general_ci
-      character-set-server = utf8
+- name: Create and edit MariaDB configuration file
+  template:
+    src: templates/99-openstack.cnf.j2
+    dest: /etc/mysql/mariadb.conf.d/99-openstack.cnf
+  notify: Restart MariaDB
 
-- name: Restart MariaDB service
+- name: Restart MariaDB
   service:
     name: mysql
     state: restarted
 
 - name: Secure MariaDB installation
-  script: |
-    /usr/bin/expect <<EOD
-    spawn mysql_secure_installation
-    expect "Enter current password for root (enter for none):"
-    send "\n"
-    expect "Set root password?"
-    send "y\n"
-    expect "New password:"
-    send "your_root_password_here\n"
-    expect "Re-enter new password:"
-    send "your_root_password_here\n"
-    expect "Remove anonymous users?"
-    send "y\n"
-    expect "Disallow root login remotely?"
-    send "y\n"
-    expect "Remove test database and access to it?"
-    send "y\n"
-    expect "Reload privilege tables now?"
-    send "y\n"
-    expect eof
-    EOD
-  become: true
+  command: mysql_secure_installation
 
 # Message Queue
 - name: Install RabbitMQ server
