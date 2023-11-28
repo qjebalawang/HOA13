@@ -51,7 +51,6 @@
     state: present
     filename: 'cloud-archive-yoga'
 
-
 - name: Install Nova Compute
   apt:
     name: nova-compute
@@ -69,18 +68,6 @@
       - mariadb-server
       - python3-pymysql
     state: present
-
-- name: Copy OpenStack MariaDB configuration file
-  copy:
-    content: |
-      [mysqld]
-      bind-address = 10.0.0.11
-      default-storage-engine = innodb
-      innodb_file_per_table = on
-      max_connections = 4096
-      collation-server = utf8_general_ci
-      character-set-server = utf8
-    dest: /etc/mysql/mariadb.conf.d/99-openstack.cnf
 
 - name: Restart MariaDB
   service:
