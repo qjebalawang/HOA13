@@ -1,14 +1,58 @@
 ---
 # Network Time Protocol (NTP)
-- name: installation of Chrony
+- name: Install Chrony
   apt:
     name: chrony
-    state: latest
+    state: present
 
-- name: configuration of Chrony
+- name: Configure Chrony
+  blockinfile:
+    path: /etc/chrony/chrony.conf
+    marker: "# {mark} Ansible managed block"
+    block: |
+      # Use the controller as the NTP server
+      server NTP_SERVER iburst
 
+      # Allow connections from the specified network
+      allow 10.0.0.0/24
+
+  notify: Restart Chrony
+
+handlers:
+  - name: Restart Chrony
+    service:
+      name: chrony
+      state: restarted
+
+  - name: Display Chrony Sources
+    command: chronyc sources
 
 # OpenStack Packages
+- name: Add OpenStack Bobcat repository
+  apt_repository:
+    repo: 'cloud-archive:bobcat'
+
+- name: Add OpenStack Antelope repository
+  apt_repository:
+    repo: 'cloud-archive:antelope'
+
+- name: Add OpenStack Zed repository
+  apt_repository:
+    repo: 'cloud-archive:zed'
+
+- name: Add OpenStack Yoga repository
+  apt_repository:
+    repo: 'cloud-archive:yoga'
+
+- name: Install Nova Compute
+  apt:
+    name: nova-compute
+    state: present
+
+- name: Install OpenStack Client
+  apt:
+    name: python3-openstackclient
+    state: present
 
 # SQL Database
 
