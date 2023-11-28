@@ -72,18 +72,12 @@
 
 - name: Create the directory
   file:
-    path: /etc/mysql/mariadb.conf.d/99-openstack.cnf
+    path: /etc/mysql/mariadb.conf.d/
     state: directory
 
-- name: Ensure the directory exists
-  file:
-    path: /etc/mysql/mariadb.conf.d/99-openstack.cnf
-    state: directory
-
-- name: Add OpenStack MariaDB configuration file
-  blockinfile:
-    path: /etc/mysql/mariadb.conf.d/99-openstack.cnf
-    block: |
+- name: Copy OpenStack MariaDB configuration file
+  copy:
+    content: |
       [mysqld]
       bind-address = 10.0.0.11
       default-storage-engine = innodb
@@ -91,6 +85,7 @@
       max_connections = 4096
       collation-server = utf8_general_ci
       character-set-server = utf8
+    dest: /etc/mysql/mariadb.conf.d/99-openstack.cnf
 
 - name: Restart MariaDB service
   service:
