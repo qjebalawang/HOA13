@@ -128,3 +128,8 @@
     - { regexp: '^ETCD_ADVERTISE_CLIENT_URLS=', line: 'ETCD_ADVERTISE_CLIENT_URLS="http://10.0.0.11:2379"' }
     - { regexp: '^ETCD_LISTEN_PEER_URLS=', line: 'ETCD_LISTEN_PEER_URLS="http://0.0.0.0:2380"' }
     - { regexp: '^ETCD_LISTEN_CLIENT_URLS=', line: 'ETCD_LISTEN_CLIENT_URLS="http://10.0.0.11:2379"' }
+
+- name: Restart Etcd
+  service:
+    name: etcd
+    state: restarted
