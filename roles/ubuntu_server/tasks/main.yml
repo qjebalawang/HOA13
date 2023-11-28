@@ -70,7 +70,7 @@
       - python3-pymysql
     state: present
 
-- name: Ensure the directory exists
+- name: Create the directory if it doesn't exist
   file:
     path: /etc/mysql/mariadb.conf.d/
     state: directory
