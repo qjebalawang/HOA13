@@ -31,11 +31,10 @@
     state: started
   notify: Restart Chrony
 
-  handlers:
-    - name: Restart Chrony
-      service:
-        name: chronyd
-        state: restarted
+- name: Restart Chrony
+  service:
+    name: chronyd
+    state: restarted
 
 # OpenStack Packages
 - name: Disable automatic update services
