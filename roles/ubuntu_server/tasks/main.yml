@@ -97,8 +97,8 @@
 - name: Set permissions for OpenStack user in RabbitMQ
   command: rabbitmqctl set_permissions openstack ".*" ".*" ".*"
 
-vars:
-  rabbitmq_password: 1234
+  vars:
+    rabbitmq_password: 1234
 
 # Memcached
 - name: Install Memcached and Python3 Memcache
