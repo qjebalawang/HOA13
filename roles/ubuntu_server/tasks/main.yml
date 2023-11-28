@@ -63,6 +63,26 @@
     state: present
 
 # SQL Database
+- name: Install MariaDB server and Python3 PyMySQL
+  apt:
+    name:
+      - mariadb-server
+      - python3-pymysql
+    state: present
+
+- name: Create and edit MariaDB configuration file
+  template:
+    src: templates/99-openstack.cnf.j2
+    dest: /etc/mysql/mariadb.conf.d/99-openstack.cnf
+  notify: Restart MariaDB
+
+- name: Restart MariaDB
+  service:
+    name: mysql
+    state: restarted
+
+- name: Secure MariaDB installation
+  command: mysql_secure_installation
 
 # Message Queue
 - name: Install RabbitMQ server
