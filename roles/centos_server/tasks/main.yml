@@ -37,11 +37,12 @@
     state: restarted
 
 # OpenStack Packages
-- name: Install OpenStack repository
+- name: Enable OpenStack repository on CentOS
   yum:
     name: centos-release-openstack-{{ openstack_release }}
   vars:
-    openstack_release: victoria
+    openstack_release: victoria  # Change to the desired OpenStack release
+  when: ansible_distribution == "CentOS"
 
 - name: Upgrade packages on all nodes
   yum:
