@@ -29,7 +29,9 @@
 # OpenStack Packages
 - name: Add OpenStack Bobcat repository
   apt_repository:
-    repo: 'cloud-archive:bobcat'
+    repo: 'deb http://archive.ubuntu.com/ubuntu/ focal-updates main'
+    state: present
+    filename: 'cloud-archive-bobcat'
 
 - name: Add OpenStack Antelope repository
   apt_repository:
