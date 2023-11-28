@@ -23,8 +23,8 @@
     name: chrony
     state: restarted
 
-  - name: Display Chrony Sources
-    command: chronyc sources
+- name: Display Chrony Sources
+  command: chronyc sources
 
 # OpenStack Packages
 - name: Add OpenStack Bobcat repository
