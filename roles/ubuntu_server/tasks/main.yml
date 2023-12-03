@@ -1,30 +1,27 @@
 ---
 # Network Time Protocol (NTP)
-- name: Install Chrony
+- name: Install Chrony on Ubuntu
   apt:
     name: chrony
     state: present
 
-- name: Configure Chrony
-  blockinfile:
+- name: Configure Chrony on Ubuntu
+  replace:
     path: /etc/chrony/chrony.conf
-    marker: "# {mark} Ansible managed block"
-    block: |
-      # Use the controller as the NTP server
-      server NTP_SERVER iburst
+    regexp: '^pool 2.debian.pool.ntp.org offline iburst'
+    replace: '# pool 2.debian.pool.ntp.org offline iburst'
+  become: yes
 
-      # Allow connections from the specified network
-      allow 10.0.0.0/24
+- name: Set controller as the NTP server on Ubuntu
+  lineinfile:
+    path: /etc/chrony/chrony.conf
+    line: 'server controller iburst'
+  become: yes
 
-  notify: Restart Chrony
-
-- name: Restart Chrony
+- name: Restart Chrony service on Ubuntu
   service:
     name: chrony
     state: restarted
-
-- name: Display Chrony Sources
-  command: chronyc sources
 
 # OpenStack Packages
 - name: Add OpenStack Bobcat repository
