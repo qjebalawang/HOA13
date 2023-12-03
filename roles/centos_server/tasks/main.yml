@@ -7,31 +7,13 @@
 
 - name: Configure Chrony
   blockinfile:
-    path: "/etc/chrony.conf"
-    marker: "# {mark} Ansible managed section"
-    insertbefore: EOF
+    path: /etc/chrony.conf
     block: |
-      # Allow NTP client access from local network
-      allow 192.168.1.0/24
-
-      # Reference the controller node for clock synchronization
       server controller iburst
-
-      # Comment out or remove other server keys
-      # server other_server iburst
-
-      # Comment out the pool line
       # pool 2.debian.pool.ntp.org offline iburst
-  notify: Restart Chrony
+  become: yes
 
-- name: Enable and Start Chrony Service
-  systemd:
-    name: chronyd
-    enabled: yes
-    state: started
-  notify: Restart Chrony
-
-- name: Restart Chrony
+- name: Restart Chrony service
   service:
     name: chronyd
     state: restarted
