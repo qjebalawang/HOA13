@@ -1,24 +1,17 @@
----
-- name: Install and configure Chrony on Ubuntu
-  hosts: all
+- name: Install Chrony
+  apt:
+    name: chrony
+    state: present
+
+- name: Configure Chrony
+  blockinfile:
+    path: /etc/chrony/chrony.conf
+    block: |
+      server NTP_SERVER iburst
+      allow 10.0.0.0/24
   become: yes
-  tasks:
-    - name: Install Chrony
-      apt:
-        name: chrony
-        state: present
 
-    - name: Configure Chrony
-      blockinfile:
-        path: /etc/chrony/chrony.conf
-        block: |
-          server NTP_SERVER iburst
-          allow 10.0.0.0/24
-      become: yes
-      vars:
-        NTP_SERVER: "your_ntp_server"
-
-    - name: Restart Chrony service
-      service:
-        name: chrony
-        state: restarted
+- name: Restart Chrony service
+  service:
+    name: chrony
+    state: restarted
