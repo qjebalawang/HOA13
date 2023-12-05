@@ -1,7 +1,7 @@
 ---
 # Network Time Protocol (NTP)
 - name: Install Chrony
-  dnf:
+  yum:
     name: chrony
     state: present
 
@@ -20,16 +20,16 @@
 
 # OpenStack Packages
 - name: Install OpenStack Client
-  dnf:
+  yum:
     name: python-openstackclient
 
 - name: Install openstack-selinux
-  dnf:
+  yum:
     name: openstack-selinux
 
 # SQL Database
 - name: Install MariaDB and related packages
-  dnf:
+  yum:
     name:
       - mariadb
       - mariadb-server
@@ -63,7 +63,7 @@
 
 # Message Queue
 - name: Install RabbitMQ server
-  dnf:
+  yum:
     name: rabbitmq-server
     state: present
 
@@ -104,7 +104,7 @@
 
 # Etcd
 - name: Install Etcd
-  dnf:
+  yum:
     name: etcd
     state: present
 
