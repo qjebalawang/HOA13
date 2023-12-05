@@ -1,7 +1,7 @@
 ---
 # Network Time Protocol (NTP)
 - name: Install Chrony
-  yum:
+  dnf:
     name: chrony
     state: present
 
@@ -19,38 +19,17 @@
     state: restarted
 
 # OpenStack Packages
-- name: Enable Extra Repositories
-  yum_repository:
-    name: powertools
-    description: CentOS-7 - PowerTools
-    baseurl: http://mirror.centos.org/centos/7/powertools/x86_64/os/
-    gpgcheck: yes
-    enabled: yes
-
-- name: Install OpenStack Release Packages
-  yum:
-    name: "{{ openstack_package }}"
-  vars:
-    openstack_package: "centos-release-openstack-victoria"  # Change to your desired release
-
-- name: Upgrade Packages
-  yum:
-    name: '*'
-    state: latest
-
 - name: Install OpenStack Client
-  yum:
+  dnf:
     name: python-openstackclient
-  when: "'el7' in ansible_distribution"
 
 - name: Install openstack-selinux
-  yum:
+  dnf:
     name: openstack-selinux
-  when: "'el7' in ansible_distribution"
 
 # SQL Database
 - name: Install MariaDB and related packages
-  yum:
+  dnf:
     name:
       - mariadb
       - mariadb-server
@@ -84,7 +63,7 @@
 
 # Message Queue
 - name: Install RabbitMQ server
-  yum:
+  dnf:
     name: rabbitmq-server
     state: present
 
@@ -125,7 +104,7 @@
 
 # Etcd
 - name: Install Etcd
-  yum:
+  dnf:
     name: etcd
     state: present
 
